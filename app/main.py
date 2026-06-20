@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime  
+from datetime import datetime
 import pickle
 
 
@@ -7,6 +7,7 @@ import pickle
 class Student:
     name: str
     age: int
+    created_at: datetime = field(default_factory=datetime.now)
 
 
 @dataclass
@@ -20,6 +21,7 @@ def write_groups_information(groups: list[Group]) -> int:
 
     for group in groups:
         students_count = len(group.students)
+
         if students_count > max_students:
             max_students = students_count
 
