@@ -1,36 +1,34 @@
-from dataclasses import dataclass, field
-from datetime import datetime
+import dataclasses
 import pickle
+from datetime import datetime
 
 
-@dataclass
+@dataclasses.dataclass
 class Specialty:
     name: str
     number: int
 
 
-@dataclass
+@dataclasses.dataclass
 class Student:
-    name: str
-    age: int
-    created_at: datetime = field(default_factory=datetime.now)
+    first_name: str
+    last_name: str
+    birth_date: datetime
+    average_mark: float
+    has_scholarship: bool
+    phone_number: str
+    address: str
 
 
-@dataclass
+@dataclasses.dataclass
 class Group:
     specialty: Specialty
     course: int
-    students: list[Student] = field(default_factory=list)
+    students: list[Student]
 
 
 def write_groups_information(groups: list[Group]) -> int:
-    max_students = 0
-
-    for group in groups:
-        students_count = len(group.students)
-
-        if students_count > max_students:
-            max_students = students_count
+    max_students = max((len(group.students) for group in groups), default=0)
 
     with open("groups.pickle", "wb") as file:
         pickle.dump(groups, file)
@@ -52,12 +50,7 @@ def read_groups_information() -> list[str]:
     except (FileNotFoundError, EOFError):
         return []
 
-    return list(
-        {
-            group.specialty.name
-            for group in groups
-        }
-    )
+    return list({group.specialty.name for group in groups})
 
 
 def read_students_information() -> list[Student]:
@@ -68,3 +61,4 @@ def read_students_information() -> list[Student]:
         return []
 
     return students
+    
