@@ -6,6 +6,7 @@ import pickle
 @dataclass
 class Specialty:
     name: str
+    number: int
 
 
 @dataclass
@@ -18,6 +19,7 @@ class Student:
 @dataclass
 class Group:
     specialty: Specialty
+    course: int
     students: list[Student] = field(default_factory=list)
 
 
