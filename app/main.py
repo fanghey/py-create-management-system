@@ -1,38 +1,25 @@
 from datetime import datetime
-import dataclasses
+from dataclasses import dataclass, field
 import pickle
 
 
 @dataclass
-class Specialty:
-    name: str
-    number: int
-
-
-@dataclass
 class Student:
-    first_name: str
-    last_name: str
-    birth_date: datetime
-    average_mark: float
-    has_scholarship: bool
-    phone_number: str
-    address: str
+    name: str
+    age: int
 
 
 @dataclass
 class Group:
-    specialty: "Specialty"
-    course: int
-    students: list["Student"] = field(default_factory=list)
+    specialty: str
+    students: list[Student] = field(default_factory=list)
 
 
-
-def write_groups_information(groups):
+def write_groups_information(groups: list[Group]) -> int:
     max_students = 0
 
     for group in groups:
-        students_count = len(getattr(group, "students", []))
+        students_count = len(group.students)
         if students_count > max_students:
             max_students = students_count
 
@@ -42,32 +29,28 @@ def write_groups_information(groups):
     return max_students
 
 
-def write_students_information(students):
+def write_students_information(students: list[Student]) -> int:
     with open("students.pickle", "wb") as file:
         pickle.dump(students, file)
 
     return len(students)
 
 
-def read_groups_information():
+def read_groups_information() -> list[str]:
     try:
         with open("groups.pickle", "rb") as file:
             groups = pickle.load(file)
     except (FileNotFoundError, EOFError):
         return []
 
-    return list({
-        getattr(group, "specialty", None)
-        for group in groups
-        if hasattr(group, "specialty")
-    } - {None})
+    return list({group.specialty for group in groups})
 
 
-def read_students_information():
+def read_students_information() -> list[Student]:
     try:
         with open("students.pickle", "rb") as file:
             students = pickle.load(file)
     except (FileNotFoundError, EOFError):
         return []
 
-    return students# write your code here
+    return students
