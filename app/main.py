@@ -4,6 +4,11 @@ import pickle
 
 
 @dataclass
+class Specialty:
+    name: str
+
+
+@dataclass
 class Student:
     name: str
     age: int
@@ -12,7 +17,7 @@ class Student:
 
 @dataclass
 class Group:
-    specialty: str
+    specialty: Specialty
     students: list[Student] = field(default_factory=list)
 
 
@@ -45,7 +50,12 @@ def read_groups_information() -> list[str]:
     except (FileNotFoundError, EOFError):
         return []
 
-    return list({group.specialty for group in groups})
+    return list(
+        {
+            group.specialty.name
+            for group in groups
+        }
+    )
 
 
 def read_students_information() -> list[Student]:
